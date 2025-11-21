@@ -2,6 +2,8 @@
 
 这是我基于 [Doom Emacs](https://github.com/doomemacs/doomemacs) 的个人配置。
 
+**仓库地址**: https://github.com/Linguage/henri.doomemacs.config
+
 ## 安装
 
 ### 1. 安装 Emacs
@@ -21,7 +23,7 @@ git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 mv ~/.config/doom ~/.config/doom.bak
 
 # 克隆此配置仓库
-git clone <your-repo-url> ~/.config/doom
+git clone https://github.com/Linguage/henri.doomemacs.config.git ~/.config/doom
 
 # 同步配置
 ~/.config/emacs/bin/doom sync
@@ -168,6 +170,10 @@ doom doctor     # 检查诊断信息
 - [Doom Emacs 文档](https://docs.doomemacs.org/)
 - [Doom Emacs Discord](https://discord.gg/doom-emacs)
 - [Evil 模式指南](https://github.com/emacs-evil/evil)
+
+## 作者
+
+**Henri Pogat** ([@Linguage](https://github.com/Linguage))
 
 ## 许可
 

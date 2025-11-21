@@ -1,6 +1,7 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Personal Information
+;; Repository: https://github.com/Linguage/henri.doomemacs.config
 (setq user-full-name "Henri Pogat"
       user-mail-address "your-email@example.com")  ; 请修改为你的邮箱
 

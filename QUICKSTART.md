@@ -1,5 +1,7 @@
 # Doom Emacs 快速入门指南
 
+> 配置仓库: https://github.com/Linguage/henri.doomemacs.config
+
 ## 🚀 立即开始
 
 ### 启动 Emacs
