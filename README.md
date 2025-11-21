@@ -80,8 +80,10 @@ source ~/.zshrc
 
 ### Org Mode
 - 📝 Org Roam（笔记管理）
+- 📓 Org Journal（日记/工作日志/学习日志系统）
+- 📅 Agenda（自定义日志视图）
+- 🌐 HTML 导出（org-html-themes 支持）
 - ✨ Pretty symbols
-- 📅 Agenda
 
 ## 常用命令
 
@@ -110,6 +112,60 @@ doom env           # 更新环境变量
 | `SPC c a` | 代码操作 |
 | `g d` | 跳转到定义 |
 | `g r` | 查找引用 |
+
+## Org Journal 使用指南
+
+### 初始化
+```bash
+# 运行设置脚本创建目录和下载主题
+~/.config/doom/setup-org-journal.sh
+```
+
+### 快捷键
+
+**创建日志**
+- `SPC n j d` - 创建个人日记
+- `SPC n j w` - 创建工作日志
+- `SPC n j s` - 创建学习日志
+- `SPC n j a` - 打开 Agenda 视图
+
+**HTML 导出**
+- `SPC n e h` - 导出为 HTML 并在浏览器打开
+- `SPC n e t` - 使用 ReadTheOrg 主题导出（推荐）
+- `SPC n e a` - 为当前文件应用 HTML 主题
+
+### 日志模板
+
+**个人日记** (diary.org)
+- 今日要点
+- 花销记录表格
+
+**工作日志** (worklog.org)
+- 完成任务
+- 问题和解决方案
+- 明日计划
+
+**学习日志** (studylog.org)
+- 主题与工作
+- 要点笔记
+- 资源链接
+
+### Agenda 视图
+
+在 Agenda 中按下列键查看不同视图：
+- `j` - 日志概览（所有日志）
+- `d` - 个人日记
+- `w` - 工作日志
+- `s` - 学习日志
+
+### HTML 导出示例
+
+查看示例文件：
+```bash
+emacs ~/Documents/EmacsNotes/Journal/example.org
+```
+
+然后按 `SPC n e t` 导出并预览。
 
 ## 定制化
 

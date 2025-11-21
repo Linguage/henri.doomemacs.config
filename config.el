@@ -38,9 +38,9 @@
       scroll-preserve-screen-position t)
 
 ;;; Org Mode Configuration
-(setq org-directory "~/org/"
-      org-roam-directory "~/org/roam/"
-      org-agenda-files '("~/org/")
+;; Basic Org settings
+(setq org-directory "~/Documents/EmacsNotes/"
+      org-roam-directory "~/Documents/EmacsNotes/roam/"
       org-log-done 'time
       org-hide-emphasis-markers t
       org-pretty-entities t)
@@ -53,6 +53,136 @@
      (python . t)
      (shell . t)
      (js . t))))
+
+;; =============================================================================
+;; Org Journal / Diary System
+
+;; Journal directories
+(setq org-default-notes-file (concat org-directory "Journal/notes.org"))
+
+;; Org Agenda files - include all journal files
+(setq org-agenda-files (list (concat org-directory "Journal/diary.org")
+                             (concat org-directory "Journal/worklog.org")
+                             (concat org-directory "Journal/studylog.org")))
+
+;; Org Capture templates for journals
+(after! org
+  (setq org-capture-templates
+        '(("d" "个人日记" entry
+           (file+olp+datetree "~/Documents/EmacsNotes/Journal/diary.org")
+           "* %U %? :journal:diary:\n%i\n** 今日要点\n\n** 花销记录\n| 项目 | 金额 | 类别 |\n|------+------+------|\n|      |      |      |\n"
+           :empty-lines 1)
+          
+          ("w" "工作日志" entry
+           (file+olp+datetree "~/Documents/EmacsNotes/Journal/worklog.org")
+           "* %U %? :journal:work:\n%i\n** 完成任务\n\n** 问题和解决方案\n\n** 明日计划\n"
+           :empty-lines 1)
+          
+          ("s" "学习日志" entry
+           (file+olp+datetree "~/Documents/EmacsNotes/Journal/studylog.org")
+           "* %U %? :journal:study:\n%i\n** 主题与工作\n\n** 要点笔记\n\n** 资源链接\n"
+           :empty-lines 1))))
+
+;; Custom Agenda views for journals
+(after! org-agenda
+  (setq org-agenda-custom-commands
+        '(("j" "日志概览"
+           ((agenda "" ((org-agenda-span 'week)
+                        (org-agenda-start-on-weekday nil)
+                        (org-agenda-show-all-dates t)))
+            (tags "diary"
+                  ((org-agenda-sorting-strategy '(time-up priority-down))
+                   (org-agenda-prefix-format "  %i %?-12t% s")
+                   (org-agenda-overriding-header "📔 个人日记:")))
+            (tags "work"
+                  ((org-agenda-sorting-strategy '(time-up priority-down))
+                   (org-agenda-prefix-format "  %i %?-12t% s")
+                   (org-agenda-overriding-header "💼 工作日志:")))
+            (tags "study"
+                  ((org-agenda-sorting-strategy '(time-up priority-down))
+                   (org-agenda-prefix-format "  %i %?-12t% s")
+                   (org-agenda-overriding-header "📚 学习日志:")))
+            (todo ""
+                  ((org-agenda-files org-agenda-files)
+                   (org-agenda-overriding-header "📝 所有待办事项:"))))
+           ((org-agenda-compact-blocks t)))
+          
+          ("d" "个人日记"
+           ((tags "diary"
+                  ((org-agenda-sorting-strategy '(time-up priority-down))
+                   (org-agenda-overriding-header "📔 个人日记条目:"))))
+           ((org-agenda-compact-blocks t)))
+          
+          ("w" "工作日志"
+           ((tags "work"
+                  ((org-agenda-sorting-strategy '(time-up priority-down))
+                   (org-agenda-overriding-header "💼 工作日志条目:"))))
+           ((org-agenda-compact-blocks t)))
+          
+          ("s" "学习日志"
+           ((tags "study"
+                  ((org-agenda-sorting-strategy '(time-up priority-down))
+                   (org-agenda-overriding-header "📚 学习日志条目:"))))
+           ((org-agenda-compact-blocks t))))))
+
+;; =============================================================================
+;; Org HTML Export Configuration
+
+(after! ox-html
+  ;; Basic HTML export settings
+  (setq org-html-doctype "html5"
+        org-html-html5-fancy t
+        org-html-use-infojs nil
+        org-html-htmlize-output-type 'css
+        org-html-htmlize-font-prefix "org-"
+        org-html-table-default-attributes 
+        '(:border "2" :cellspacing "0" :cellpadding "6" :rules "groups" :frame "hsides"))
+  
+  ;; HTML themes directory (org-html-themes)
+  (defvar my/org-html-themes-dir 
+    (expand-file-name "~/Documents/EmacsNotes/org-html-themes/")
+    "本地 org-html-themes 目录路径。")
+  
+  (defvar my/org-html-default-theme "ReadTheOrg"
+    "默认使用的 HTML 主题。")
+  
+  ;; Quick HTML export and open in browser
+  (defun my/org-html-export-and-open ()
+    "导出当前 Org 文件为 HTML 并在浏览器中打开。"
+    (interactive)
+    (let ((html-file (org-html-export-to-html)))
+      (when html-file
+        (browse-url (concat "file://" (expand-file-name html-file)))
+        (message "HTML 文件已导出并在浏览器中打开: %s" html-file))))
+  
+  ;; Apply HTML theme
+  (defun my/org-html-apply-theme ()
+    "为当前 Org 文件应用 ReadTheOrg HTML 主题。"
+    (interactive)
+    (let ((theme-file (expand-file-name "org/theme-readtheorg.setup" my/org-html-themes-dir)))
+      (if (file-exists-p theme-file)
+          (progn
+            (save-excursion
+              (goto-char (point-min))
+              ;; Remove existing SETUPFILE
+              (while (re-search-forward "^#\\+SETUPFILE:.*org-html-themes.*$" nil t)
+                (delete-region (line-beginning-position) (1+ (line-end-position))))
+              ;; Insert new SETUPFILE
+              (goto-char (point-min))
+              (if (looking-at "^#\\+TITLE:")
+                  (forward-line 1)
+                (goto-char (point-min)))
+              (insert (format "#+SETUPFILE: %s\n" theme-file)))
+            (message "已应用 ReadTheOrg HTML 主题"))
+        (message "主题文件不存在: %s\n请运行: git clone https://github.com/fniessen/org-html-themes.git %s"
+                 theme-file (file-name-directory my/org-html-themes-dir)))))
+  
+  ;; Quick HTML export with theme
+  (defun my/org-html-quick-export ()
+    "快速 HTML 导出：应用主题并在浏览器打开。"
+    (interactive)
+    (my/org-html-apply-theme)
+    (my/org-html-export-and-open)))
 
 ;;; Programming Configuration
 ;; LSP
@@ -112,7 +242,17 @@
       (:prefix ("n" . "notes")
        :desc "Find note" "n" #'org-roam-node-find
        :desc "Insert note" "i" #'org-roam-node-insert
-       :desc "Capture" "c" #'org-roam-capture)
+       :desc "Org capture" "c" #'org-capture
+       :desc "Roam capture" "r" #'org-roam-capture
+       (:prefix ("j" . "journal")
+        :desc "New diary entry" "d" #'(lambda () (interactive) (org-capture nil "d"))
+        :desc "New work log" "w" #'(lambda () (interactive) (org-capture nil "w"))
+        :desc "New study log" "s" #'(lambda () (interactive) (org-capture nil "s"))
+        :desc "Agenda" "a" #'org-agenda)
+       (:prefix ("e" . "export")
+        :desc "HTML export" "h" #'my/org-html-export-and-open
+        :desc "HTML with theme" "t" #'my/org-html-quick-export
+        :desc "Apply theme" "a" #'my/org-html-apply-theme))
       (:prefix ("t" . "toggle")
        :desc "Line numbers" "l" #'doom/toggle-line-numbers
        :desc "Treemacs" "t" #'treemacs))
