@@ -1,0 +1,21 @@
+;;; custom.el --- Machine-specific settings -*- lexical-binding: t; -*-
+
+;; This file is for machine-specific settings that you don't want to version control.
+;; Copy this file to custom.el and edit as needed.
+
+;; Example: Different font sizes for different machines
+;; (setq doom-font (font-spec :family "JetBrains Mono" :size 16))
+
+;; Example: Proxy settings
+;; (setq url-proxy-services
+;;       '(("http" . "proxy.example.com:8080")
+;;         ("https" . "proxy.example.com:8080")))
+
+;; Example: Company-specific API keys (use environment variables for secrets!)
+;; (setenv "OPENAI_API_KEY" "your-key-here")
+
+;; Example: Different org directory
+;; (setq org-directory "~/Documents/org/")
+
+;; Example: Work-specific configurations
+;; (setq projectile-project-search-path '("~/work/" "~/projects/"))

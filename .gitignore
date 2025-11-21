@@ -1,0 +1,20 @@
+# Machine-specific configuration
+custom.el
+
+# Auto-generated files
+*.elc
+.local/
+straight/
+
+# Backup files
+*~
+\#*\#
+.\#*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
