@@ -71,6 +71,10 @@
 ;; Enhanced org-mode
 ;; (package! org-super-agenda)
 (package! org-modern)  ; Modern org-mode appearance
+(package! org-bullets)
+(package! org-superstar)
+(package! org-download)
+(package! all-the-icons)
 ;; (package! org-roam-ui)  ; UI for org-roam
 
 ;; Code intelligence
